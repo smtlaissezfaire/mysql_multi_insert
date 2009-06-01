@@ -47,4 +47,10 @@ describe MysqlMultiInsert do
     User.connection.should_receive(:execute).once
     User.multi_insert [User.new, User.new]
   end
+
+  it "should do nothing with an empty array" do
+    User.connection.should_not_receive(:execute)
+    
+    User.multi_insert []
+  end
 end

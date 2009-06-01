@@ -14,17 +14,19 @@ module MysqlMultiInsert
     end
 
     def run
-      str = "INSERT INTO #{table_name} "
-      str << "(#{quoted_column_names(@array.first)}) VALUES "
-
-      length = @array.length - 1
-
-      @array.each_with_index do |record, index|
-        str << "(#{quoted_values(record)})"
-        str << ", " unless index == length
+      if @array.any?
+        str = "INSERT INTO #{table_name} "
+        str << "(#{quoted_column_names(@array.first)}) VALUES "
+   
+        length = @array.length - 1
+   
+        @array.each_with_index do |record, index|
+          str << "(#{quoted_values(record)})"
+          str << ", " unless index == length
+        end
+   
+        connection.execute str
       end
-
-      connection.execute str
     end
 
   private
