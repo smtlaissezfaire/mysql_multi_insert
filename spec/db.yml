@@ -1,0 +1,3 @@
+adapter:  "mysql"
+database: "mysql_multi_insert_tests"
+user:     "root"

@@ -3,12 +3,9 @@ require File.dirname(__FILE__) + "/../lib/mysql_multi_insert"
 require 'rubygems'
 require 'mysql'
 require 'active_record'
+require 'yaml'
 
-ActiveRecord::Base.establish_connection \
-:adapter => 'mysql',
-:database  => 'mysql_multi_insert_tests',
-:user => "root"
-
+ActiveRecord::Base.establish_connection YAML.load(File.read(File.dirname(__FILE__) + "/db.yml"))
 ActiveRecord::Migration.verbose = false
 
 ActiveRecord::Schema.define do
