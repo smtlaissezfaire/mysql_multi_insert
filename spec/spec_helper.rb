@@ -17,6 +17,11 @@ ActiveRecord::Schema.define do
   create_table :foos, :force => true do |t|
     t.timestamps
   end
+
+  create_table :members, :force => true do |t|
+    t.string :name
+    t.timestamps
+  end
 end
 
 class User < ActiveRecord::Base
@@ -25,4 +30,10 @@ end
 
 class Foo < ActiveRecord::Base
   extend MysqlMultiInsert
+end
+
+class Member < ActiveRecord::Base
+  extend MysqlMultiInsert
+
+  validates_presence_of :name
 end

@@ -4,6 +4,7 @@ describe MysqlMultiInsert do
   def clear_db
     User.delete_all
     Foo.delete_all
+    Member.delete_all
   end
 
   before do
@@ -52,5 +53,31 @@ describe MysqlMultiInsert do
     User.connection.should_not_receive(:execute)
     
     User.multi_insert []
+  end
+
+  describe "validations" do
+    it "should insert when passed skip_validation => true" do
+      m = Member.new
+
+      lambda {
+        Member.multi_insert [m], :skip_validations => true
+      }.should change { Member.count }.by(1)
+    end
+
+    it "should not insert when passed skip_validations => false" do
+      m = Member.new
+
+      lambda {
+        Member.multi_insert [m], :skip_validations => false
+      }.should_not change { Member.count }
+    end
+
+    it "should not insert invalid records by default" do
+      m = Member.new
+
+      lambda {
+        Member.multi_insert [m]
+      }.should_not change { Member.count }
+    end
   end
 end

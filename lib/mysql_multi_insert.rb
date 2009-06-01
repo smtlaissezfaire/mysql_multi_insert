@@ -1,11 +1,11 @@
 module MysqlMultiInsert
-  def multi_insert(record_array)
-    MultiInsertion.run(self, record_array)
+  def multi_insert(record_array, options={})
+    MultiInsertion.run(self, record_array, options)
   end
 
   class MultiInsertion
-    def self.run(klass, array)
-      new(klass, array).run
+    def self.run(klass, array, options={})
+      new(klass, array).run(options)
     end
 
     def initialize(klass, array)
@@ -13,23 +13,29 @@ module MysqlMultiInsert
       @array = array
     end
 
-    def run
+    def run(options={})
       if @array.any?
-        str = "INSERT INTO #{table_name} "
-        str << "(#{quoted_column_names(@array.first)}) VALUES "
-   
-        length = @array.length - 1
-   
-        @array.each_with_index do |record, index|
-          str << "(#{quoted_values(record)})"
-          str << ", " unless index == length
+        if options[:skip_validations] == true || @array.all? { |record| record.valid? }
+          insert_records(@array)
         end
-   
-        connection.execute str
       end
     end
 
   private
+
+    def insert_records(array)
+      str = "INSERT INTO #{table_name} "
+      str << "(#{quoted_column_names(array.first)}) VALUES "
+      
+      length = array.length - 1
+      
+      array.each_with_index do |record, index|
+        str << "(#{quoted_values(record)})"
+        str << ", " unless index == length
+      end
+      
+      connection.execute str
+    end
 
     def quoted_column_names(record)
       r = record.send(:quoted_column_names)
