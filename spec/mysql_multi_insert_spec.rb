@@ -80,4 +80,8 @@ describe MysqlMultiInsert do
       }.should_not change { Member.count }
     end
   end
+  
+  it "should be at version = 1.0.0" do
+    MysqlMultiInsert::VERSION.should == "1.0.0"
+  end
 end
