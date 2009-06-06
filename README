@@ -1,13 +1,19 @@
 MysqlMultiInsert
 ================
 
-Introduction goes here.
-
+Insert multiple AR objects with one SQL INSERT statement.
 
 Example
 =======
 
-Example goes here.
+class MyClass < ActiveRecord::Base
+  include MysqlMultiInsert
+end
+
+obj1 = MyClass.new
+obj2 = MyClass.new
+
+MyClass.multi_insert [obj1, obj2] #=> One insert statement
 
 
-Copyright (c) 2009 [name of plugin creator], released under the MIT license
+Copyright (c) 2009 Scott Taylor <scott@railsnewbie.com>, released under the MIT license
